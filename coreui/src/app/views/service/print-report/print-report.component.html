@@ -1,0 +1,297 @@
+<div style="background-color: #fff; min-height: 100vh;">
+    
+  <div id="invoice" class="container-fluid animated fadeIn">
+    <div class="toolbar hidden-print">
+      <hr />
+    </div>
+    <div class="invoice" id="invoice-content">
+      <div style="width: 100% !important; font-size: 16px;">
+        <header></header>
+        <main>
+          <div class="row contacts">
+            <div class="col invoice-details"></div>
+          </div>
+          <!-- loader -->
+          <div style="text-align: center" *ngIf="loader">
+            <div class="lds-ripple">
+              <div></div>
+              <div></div>
+            </div>
+          </div>
+          <!-- loader end-->
+  
+          <!-- patient info -->
+          <div class="row title-row bg-title-silver">
+    <div class="col-7">
+      <span class="font-weight-bold title-width">Patient Name:</span>
+      {{ patientInfo?.name_prefix | uppercase }}
+      {{ patientInfo?.p_name | uppercase }}
+    </div>
+    <div class="col-5" style="padding-left: 40px;">
+      <span class="font-weight-bold title-width">Bill ID:</span>
+      {{ patientData?.bill_id }}
+    </div>
+  </div>
+  <div class="row title-row">
+    <div class="col-7">
+      <span class="font-weight-bold title-width">Age/Gender:</span> {{ patientInfo?.age }} {{ patientInfo?.age_period }} / {{ patientInfo?.gender }}
+    </div>
+    <div class="col-5" style="padding-left: 40px;">
+      <span class="font-weight-bold title-width">Sample Date:</span>
+      {{ patientData?.bill_date|date:'dd-MM-yyyy' }}
+    </div>
+  </div>
+  <div class="row title-row mb2 bg-title-silver">
+    <div class="col-7">
+      <span class="font-weight-bold title-width">Refer By:</span>
+      {{ patientData?.ref_dr_name }}
+    </div>
+    <div class="col-5" style="padding-left: 40px;">
+      <span class="font-weight-bold title-width">Printing Date:</span> {{ now|date:'dd-MM-yyyy' }}
+    </div>
+  </div>
+          <hr style="visibility: hidden;" size="1" />
+          <!-- {{ reportStyle }} -->
+          <!-- {{ testsByGroup | json }} -->
+          <div [style.display]="header ? 'block' : 'none'">
+            <div class="row mb-2 mt-2" style="font-weight: bold">
+              <!-- <div class="col-1">Profile</div> -->
+              <div class="col-4">INVESTIGATION</div>
+              <div class="col-2">RESULT</div>
+              <div class="col-2">UNIT</div>
+              <div class="col-4">BIO. REF. INTERVAL</div>
+            </div>
+            <hr size="1" style="border-top: 1px solid #d0d0d0;" />
+          </div>
+  
+          <ng-container *ngFor="let group of testsByGroup | keyvalue">
+            <div class="row mt-3">
+              <div class="col-12">
+                <h5 style="text-align: center; font-weight: bolder">
+                  [{{ group.key }}]
+                </h5>
+              </div>
+            </div>
+            <ng-container *ngFor="let test of group.value">
+              <!-- test profile -->
+              <div *ngIf="test.queryParams.isProfile == 'y'">
+                <div class="row">
+                  <div class="col-12">
+                    <h6 style="font-weight: bolder; font-size: 16px">
+                      {{ test.queryParams.profileName }}
+                    </h6>
+                  </div>
+                </div>
+                <div *ngFor="let pTest of test.items">
+                  <!-- {{ pTest.queryParams | json }} -->
+                  <!-- profile single test -->
+                  <ng-container
+                    *ngIf="
+                      pTest.queryParams.isProfile === 'y' &&
+                      pTest.queryParams.reportStyle === 'single'
+                    "
+                  >
+                    <div class="row mt-2">
+                      <div class="col-4" style="font-size: 13px; padding-left: 40px;">
+                        <span class="font-weight-bold mt2">
+                          {{ pTest.queryParams.report[0].title }}
+                        </span>
+                        <br />
+                        {{ pTest.queryParams.report[0].subtitle }}
+                      </div>
+                      <div class="col-2">
+                        {{ pTest.queryParams.report[0].value }}
+                      </div>
+                      <div class="col-2"></div>
+                      <div class="col-4"></div>
+                    </div>
+                  </ng-container>
+                  <!-- profile numeric pTest -->
+                  <ng-container
+                    *ngIf="
+                      pTest.queryParams.isProfile === 'y' &&
+                      pTest.queryParams.reportStyle === 'numeric'
+                    "
+                  >
+                    <!-- {{ pTest.queryParams.report[0] | json }} -->
+  
+                    <div class="row mt-2">
+                      <div class="col-4" style="font-size: 13px; padding-left: 40px;" >
+                        <span class="font-weight-bold">
+                          {{ pTest.queryParams.report[0].title }}
+                        </span>
+                        {{ pTest.queryParams.report[0].subtitle }}
+                        <br />
+                      </div>
+                      <div class="col-3" [style]="{fontWeight: pTest.queryParams.report[0].assessment == 'normal' ? 'normal' : 'bold'}">
+                        <i *ngIf="pTest.queryParams.report[0].assessment == 'high'" [class]="upIcon"></i>
+                        <i *ngIf="pTest.queryParams.report[0].assessment == 'low'" [class]="downIcon"></i>
+                        <i *ngIf="pTest.queryParams.report[0].assessment == 'normal'" style="visibility: hidden;" [class]="downIcon"></i>
+                        {{ pTest.queryParams.report[0].value }}
+                      </div>
+                      <div class="col-2">
+                        {{ pTest.queryParams.report[0].unit }}
+                      </div>
+                      <div class="col-3">
+                        <span class="font-weight-bold">
+                          {{ pTest.queryParams.report[0].range }}
+                        </span>
+                      </div>
+                    </div>
+                  </ng-container>
+                  <!-- profile descriptive pTest -->
+                  <ng-container
+                    *ngIf="
+                      pTest.queryParams.isProfile === 'y' &&
+                      pTest.queryParams.reportStyle === 'descriptive'
+                    "
+                  >
+                    <div class="row mt-2">
+                      <div class="col-12">
+                        <span
+                          [innerHTML]="pTest.queryParams.report[0].description|safeHtml"
+                        ></span>
+                      </div>
+                    </div>
+                  </ng-container>
+                </div>
+              </div>
+              <!-- single test -->
+              <ng-container
+                *ngIf="
+                  test.queryParams.isProfile !== 'y' &&
+                  test.queryParams.reportStyle == 'single'
+                "
+              >
+                <!-- {{ test.queryParams.report[0] | json }} -->
+                <div class="row mt-2">
+                  <div class="col-12">
+                    <span class="font-weight-bold mt2">
+                      {{ test.queryParams.report[0].title }}
+                    </span>
+                  </div>
+                </div>
+                <div
+                  class="row mt-2"
+                  *ngFor="let report of test.queryParams.report"
+                >
+                  <div class="col-4" style="padding-left: 40px;">
+                    {{ report.subtitle }}
+                  </div>
+                  <div class="col-2">
+                    {{ report.value }}
+                  </div>
+                  <div class="col-2"></div>
+                  <div class="col-4"></div>
+                </div>
+                <div style="margin-top: 10px;" class="row" *ngIf="test.queryParams.interpretation">
+                  <div class="col-12">
+                    <h6 style="font-weight: bolder; font-size: 14px">
+                      Interpretation:
+                    </h6>
+                    <div style="text-align: justify;font-size: 12px;">
+                      {{ test.queryParams.interpretation }}
+                    </div>
+                  </div>
+                </div>
+                <div style="border-bottom: 1px solid #eee; margin: 4px 0;"></div>
+              </ng-container>
+              <!-- numeric test -->
+              <ng-container
+                *ngIf="
+                  test.queryParams.isProfile !== 'y' &&
+                  test.queryParams.reportStyle == 'numeric'
+                "
+              >
+                <!-- {{ test.queryParams.report[0] | json }} -->
+  
+               <div
+                  class="row mt-2"
+                  *ngFor="let report of test.queryParams.report; let i = index"
+                >
+                  <div class="col-12" *ngIf="test.queryParams.report[i-1]?.title != report.title">
+                    <span class="font-weight-bold mt2">
+                      {{ report.title }}
+                    </span>
+                  </div>
+                  <div class="col-4" style="padding-left: 40px;">
+                    {{ report.subtitle }}
+                  </div>
+                  <div class="col-2" [style]="{fontWeight: report.assessment == 'normal' ? 'normal' : 'bold'}">
+                    <i *ngIf="report.assessment == 'high'" [class]="upIcon"></i>
+                    <i *ngIf="report.assessment == 'low'" [class]="downIcon"></i>
+                    <i *ngIf="report.assessment == 'normal'" style="visibility: hidden;" [class]="downIcon"></i>
+                    {{ report.value }}
+                  </div>
+                  <div class="col-2">
+                    {{ report.unit }}
+                  </div>
+                  <div class="col-4">
+                    <span class="font-weight-bold">
+                      {{ report.range }}
+                    </span>
+                  </div>
+                </div>
+                <div style="margin-top: 10px;" class="row" *ngIf="test.queryParams.interpretation">
+                  <div class="col-12">
+                    <h6 style="font-weight: bolder; font-size: 14px">
+                      Interpretation:
+                    </h6>
+                    <div style="text-align: justify;font-size: 12px;">
+                      {{ test.queryParams.interpretation }}
+                    </div>
+                  </div>
+                </div>
+                <div style="border-bottom: 1px solid #eee; margin: 4px 0;"></div>
+              </ng-container>
+              <!-- Description test -->
+              <ng-container
+                *ngIf="
+                  test.queryParams.isProfile !== 'y' &&
+                  test.queryParams.reportStyle === 'descriptive'
+                "
+              >
+                {{ hideHeader() }}
+                <span [innerHTML]="test.queryParams.report[0].description|safeHtml"></span>
+              </ng-container>
+              <!-- warning if wrong type test selected -->
+              <ng-container
+                *ngIf="
+                  (test.queryParams.reportStyle == 'descriptive' &&
+                    reportStyle != 'descriptive') ||
+                  (test.queryParams.reportStyle != 'descriptive' &&
+                    reportStyle == 'descriptive')
+                "
+                ><span hidden style="font-weight: bold">
+                  {{ test.queryParams.name }}:
+                </span>
+                <span hidden style="color: #f00"
+                  >this test is not fit to print in this section, please uncheck
+                  and print seperately</span
+                >
+              </ng-container>
+            </ng-container>
+          </ng-container>
+          <!-- <div class="notices">
+            <div>NOTICE:</div>
+            <div class="notice">Report will be deliver only after full payment is done.</div>
+          </div> -->
+        </main>
+        <!-- <footer> Invoice was created on a computer and is valid without the signature and seal. </footer> -->
+      </div>
+      <!--DO NOT DELETE THIS div. IT is responsible for showing footer always at the bottom-->
+      <div></div>
+    </div>
+    <i class="fa fa-user" style="visibility: hidden;"></i>
+  </div>
+
+
+  <div *ngIf="patientData?.payment_status == 'paid'" style="padding: 15px; text-align: center;" class="hidden-print">
+      <button type="button" *ngIf="hasSingle" class="btn btn-warning" (click)="printReport(false)">Print Report 1</button>
+      <button type="button" *ngIf="hasDesctiptive" class="btn btn-warning" (click)="printReport(true)">Print Report 2</button>
+  </div>
+  <div *ngIf="patientData?.payment_status != 'paid'" style="padding: 15px; text-align: center;" class="hidden-print">
+    <h4 class="text-warning">Please make full payment to download test reports</h4>
+  </div>
+      
+</div>

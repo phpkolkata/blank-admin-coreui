@@ -1,0 +1,251 @@
+// If you want to override variables do it here
+@import "variables";
+
+// Import styles
+@import "~@coreui/coreui/scss/coreui";
+
+// If you want to add something do it here
+@import "custom";
+
+
+.p-component {
+    font-size: 14px;
+}
+.pi-sort-alt:before {
+    content: "\e915";
+}
+.p-datatable .p-datatable-thead > tr > th {
+    padding: 16px 6px;
+    font-size: 13px;
+    border: 1px solid #c8c8c8;
+    color: #333;
+    background-color: #f4f4f4;
+}
+.p-datatable .p-datatable-thead > tr:first-child > th {
+    background-color: #d0e8ef;
+}
+.pi {
+    font-size: .95em !important;
+}
+.p-datatable .p-sortable-column .p-sortable-column-icon {
+    color: #6c757d;
+    margin-left: 0;
+}
+.p-datatable .p-sortable-column:hover .p-sortable-column-icon {
+    color: #333 !important;
+}
+.p-datatable .p-datatable-tbody > tr > td {
+    text-align: left;
+    border: 1px solid #c8c8c8;
+    padding: .571em .857em;
+}
+.p-datatable tbody tr:nth-of-type(even) {
+    background-color: rgba(0,0,0,.05);
+}
+
+.p-sidebar-close {
+    font-size: 40px!important;
+    color: red!important;
+    font-weight: bold;
+    margin-top: 14px;
+}
+.p-sidebar-close span {
+    display: inline-block;
+    font: normal normal normal 14px/1 FontAwesome;
+    font-size: inherit;
+    text-rendering: auto;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+.p-sidebar-close span::before {
+    content: "\f00d";
+}
+.p-sidebar-content .container-fluid .no-gutters:first-child {
+    padding-right: 38px;
+}
+.p-sidebar-content a:hover {
+    text-decoration: none;
+}
+
+.ui-float-label {
+    display: block;
+    position: relative;
+}
+.ui-float-label>label {
+    font-weight: 400;
+    position: absolute;
+    pointer-events: none;
+    left: .85em;
+    top: 50%;
+    margin-top: -.5em;
+    transition: all .3s ease;
+    -moz-transition: .3s ease all;
+    -webkit-transition: all .3s ease;
+    color: #898989;
+    line-height: 1;
+}
+.ui-float-label>input:not(:placeholder-shown)~label, .ui-float-label>input.ui-state-filled~label, .ui-float-label>input:focus~label {
+    top: -.75em;
+    left: .25em;
+    font-size: 12px;
+}
+.p-dropdown {
+    height: 35px;
+}
+.p-dropdown-label {
+    padding-top: 5px;
+}
+
+.p-inputtext {
+    padding: 0.375rem 0.75rem;
+}
+.p-multiselect .p-multiselect-label {
+    padding: 0.385rem 0.75rem;
+}
+
+
+
+.p-picklist-item  span:first-child, .p-picklist-source span:first-child {
+    font-size: 13px;
+    font-weight: 600;
+    float: left;
+    margin: 5px;
+}
+.p-picklist-item   span:nth-child(2), .p-picklist-source span:nth-child(2) {
+    font-size: 13px; float: right; margin: 5px;
+}
+.p-picklist-target span:first-child {
+    font-size: 13px;
+    font-weight: 600;
+    float: left;
+    margin: 5px;
+
+    margin: 5px;
+    font-weight: bold;
+    color: #319ae0;
+    font-size: 15px;
+}
+.p-picklist-target span:nth-child(2) {
+    font-size: 13px; float: right; margin: 5px;
+
+    margin: 5px;
+    font-weight: bold;
+    color: #319ae0;
+    font-size: 15px;
+}
+
+.ui-inputgroup {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+}
+.ui-inputgroup .ui-inputgroup-addon:first-child {
+    border-top-left-radius: 3px;
+    border-bottom-left-radius: 3px;
+}
+.ui-inputgroup .ui-inputgroup-addon:last-child {
+    border-top-right-radius: 3px;
+    border-bottom-right-radius: 3px;
+}
+.ui-inputgroup .ui-inputgroup-addon {
+    border-color: #a6a6a6;
+    background-color: #eaeaea;
+    color: #848484;
+    padding: .429em;
+    min-width: 2em;
+}
+.ui-inputgroup .ui-inputgroup-addon {
+    display: inline-block;
+    text-align: center;
+    min-width: 1.5em;
+    padding: .25em;
+    line-height: 26px;
+    border-width: 1px;
+    border-style: solid;
+}
+app-sidebar-nav-items app-sidebar-nav-items {
+    background: #777;
+}
+app-sidebar-nav-items app-sidebar-nav-items .nav-link.active {
+    background: #666 !important;
+}
+app-sidebar-nav-items app-sidebar-nav-items  .nav-icon {
+    color: #ccc !important;
+}
+
+// app-sidebar-nav-dropdown:nth-child(9) app-sidebar-nav-items {
+//     top: -30px;
+// }
+// app-sidebar-nav-dropdown:nth-child(12) app-sidebar-nav-items {
+//     top: -80px;
+// }
+.header-fixed .app-header {
+    z-index: 100;
+}
+
+@media print
+{    
+    .hidden-print, .hidden-print *, .p-sidebar-close
+    {
+        visibility: hidden !important;
+    }
+}
+
+// .sidebar .sidebar-nav {
+//     position: static !important;
+// }
+// .sidebar-minimized .sidebar .sidebar-nav {
+//     overflow: auto !important;
+// }
+
+// .sidebar-minimized .sidebar .sidebar-nav::-webkit-scrollbar {
+//     width: 1px;
+// }
+
+
+
+html:not([dir=rtl]) .aside-menu {
+    right: 0;
+    margin-right: -353px;
+}
+.aside-menu {
+    width: 353px;
+}
+
+.p-datepicker table td > span {
+    width: 1.9rem;
+    height: 1.9rem;
+
+}
+
+@media print {
+    .no-print {
+        display: none;
+    }
+    .app-footer {
+        display: none;
+    }
+    .full-print {
+        max-width: 100%;
+        flex: 100%;
+    }
+}
+
+// @media print {
+//     body * {
+//       visibility: hidden;
+//       position: static !important;
+//     }
+    
+//     #section-to-print {
+//         border: 1px solid red;
+//     }
+//     #section-to-print, #section-to-print * {
+//       visibility: visible;
+//     }
+//     #section-to-print {
+//       position: absolute;
+//       left: 0;
+//       top: 0;
+//     }
+//   }

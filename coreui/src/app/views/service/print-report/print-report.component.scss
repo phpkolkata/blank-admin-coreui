@@ -1,0 +1,29 @@
+.print-only {
+    display: none;
+}
+@media print
+{    
+    .print-only {
+        display: block;
+    }
+    .hidden-print, .hidden-print *, .p-sidebar-close, .toolbar
+    {
+        display: none !important;
+    }
+    .bg-title-silver {
+        background-color: #eee !important;
+        -webkit-print-color-adjust:exact;
+    }
+    
+}
+.bg-title-silver {
+    background-color: #eee;
+}
+
+.title-width {
+    width: 130px;
+    display: inline-block;
+}
+.title-row {
+    padding: 6px 0;
+}

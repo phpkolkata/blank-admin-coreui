@@ -1,0 +1,15 @@
+<div style="max-width: 300px; padding: 20px; margin: auto;">
+    <div style="height: 20px;"></div>
+    <img style="width: 200px; margin: auto; display: block;" src="assets/img/brand/labsystem.png"  alt="">
+    <div style="height: 20px;"></div>
+    <div>
+        <form #frm="ngForm" (ngSubmit)="checkCenter(frm)">
+            <div style="float: right;">
+                <button id="selectCenterSubmitBtn" class="btn btn-primary" [disabled]="!frm.valid">Submit</button>
+            </div>
+            <div style="margin-right: 73px;">
+                <input type="text" required name="center_code" [(ngModel)]="code" class="form-control" placeholder="Center code">
+            </div>
+        </form>
+    </div>
+</div>

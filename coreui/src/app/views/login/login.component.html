@@ -1,0 +1,70 @@
+<div class="app-body">
+  <main class="main d-flex align-items-center">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-8 mx-auto">
+          <div class="card-group" style="box-shadow: -5px 12px 20px -1px rgba(0,0,0,0.3);
+          -webkit-box-shadow: -5px 12px 20px -1px rgba(0,0,0,0.3);
+          -moz-box-shadow: -5px 12px 20px -1px rgba(0,0,0,0.3);">
+            <div class="card p-4" style="background: #e0e0e0;; border: none">
+              <div class="card-body">
+                <div class="col-12" style="position: absolute; left: 0; top: 15px;" *ngIf="srvAuth.errorMessage">
+                  <div class="alert alert-danger" *ngIf="!isLoading">
+                    <p style="margin-bottom: 0;">{{srvAuth.errorMessage}}</p>
+                  </div>
+                </div>
+                <!-- loader -->
+                <div style="height: 50px;">
+                  <div style="text-align: center;" *ngIf="isLoading">
+                    <div class="lds-ripple">
+                      <div></div>
+                      <div></div>
+                    </div>
+                  </div>
+                </div>
+                <!-- form -->
+                <form #frm="ngForm" (ngSubmit)="onLogin(frm)" >
+                  <h1>Lab Login</h1>
+                  <p class="text-muted">Sign In to your account</p>
+                  <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text"><i class="icon-user"></i></span>
+                    </div>
+                    <input type="text" class="form-control-lg" style="border: none; outline: none;" name="email" ngModel placeholder="Email" required>
+                  </div>
+                  <div class="input-group mb-4">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text"><i class="icon-lock"></i></span>
+                    </div>
+                    <input type="password" class="form-control-lg" style="border: none; outline: none;" name="password" ngModel placeholder="Password" required>
+                  </div>
+                  <div class="row">
+                    <div class="col-12 text-right">
+                      <button type="submit" class="btn btn-lg btn-warning px-4 shadow" [disabled]="!frm.valid">Login</button>
+                    </div>
+                    <!-- <div class="col-6 text-right">
+                      <button type="button" class="btn btn-link px-0">Forgot password?</button>
+                    </div> -->
+                  </div>
+                </form>
+              </div>
+            </div>
+            <div class="card text-white" style="background: #999;  border: none">
+              <div class="card-body text-center" style="width: 250px;
+                height: 250px;
+                margin: 0 auto;
+                margin-top: 115px;
+                padding: 0px;">
+                <div class="card card-block" style="background: transparent; border: none;">
+                  <img src="assets/img/brand/labsystem.png">
+                </div>
+                <p *ngIf="!isLoading">
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>

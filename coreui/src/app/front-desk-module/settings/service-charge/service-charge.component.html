@@ -1,0 +1,359 @@
+<p-toast [baseZIndex]="5000"></p-toast>
+<div class="hLoader"  [style]="{height: '6px', overflow: 'hidden', visibility: loader ? 'visible' : 'hidden'}">
+  <p-progressBar
+    mode="indeterminate"
+  ></p-progressBar>
+</div>
+<!--/.row-->
+<div class="row">
+  <div class="col-lg-12">
+    <div class="card">
+      <div class="card-header" style="padding: 8px; text-align: center;">
+        <div class="row">
+          <div class="col-3">
+            <div class="float-left">
+              <i class="fa fa-align-justify"></i> Manage {{ title }}
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="float-left">
+              <span style="margin-left: 10px; font-weight: bold;"
+                ><a
+                  [routerLink]="'/settings/payment-mode'"
+                  class="btn btn-outline-info"
+                  >Payment Modes</a
+                >
+                |
+                <a
+                  [routerLink]="'/settings/service-charge'"
+                  class="btn btn-outline-info"
+                  >Serviec Charges</a
+                >
+                |
+                <a
+                  [routerLink]="'/settings/discount-cause'"
+                  class="btn btn-outline-info"
+                  >Discount Causes</a
+                >
+                |
+                <a
+                  [routerLink]="'/settings/test-units'"
+                  class="btn btn-outline-info"
+                  hidden
+                  >Test Units</a
+                >
+              </span>
+            </div>
+          </div>
+          <div class="col-3">
+            <!-- tools -->
+            <div class="float-right">
+              <div
+                class="btn-group"
+                role="group"
+                aria-label="button group"
+                style="margin-right: 20px;"
+              >
+                <button
+                  type="button"
+                  label="PDF"
+                  (click)="exportPdf()"
+                  class="btn btn-primary btn-sm"
+                  pTooltip="Download PDF"
+                  tooltipPosition="top"
+                >
+                  <i class="fa fa-file-pdf-o"></i>
+                </button>
+                <button
+                  type="button"
+                  iconPos="left"
+                  label="CSV"
+                  (click)="dt.exportCSV()"
+                  pTooltip="Download CSV"
+                  class="btn btn-secondary btn-sm"
+                  tooltipPosition="top"
+                >
+                  <i class="fa fa-file-excel-o"></i>
+                </button>
+                <button
+                  (click)="captureScreen()"
+                  class="btn btn-facebook btn-sm"
+                  pTooltip="Capture Screen"
+                  tooltipPosition="top"
+                >
+                  <i class="fa fa-image"></i>
+                </button>
+              </div>
+              <!-- --- -->
+              <button
+                type="button"
+                data-toggle="modal"
+                (click)="editMode = false; frm.reset(); modalAddEdit.show()"
+                class="btn btn-success"
+                tooltipPosition="top"
+                pTooltip="Add Records"
+              >
+                <i class="fa fa-plus"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card-body">
+        <p-table
+          #dt
+          [columns]="cols"
+          [value]="database"
+          [lazy]="true"
+          (onLazyLoad)="loadRowsLazy($event)"
+          sortField="id"
+          [sortOrder]="1"
+          reorderableColumns="true"
+          sortMode="multiple"
+          [paginator]="true"
+          [rows]="limit"
+          [totalRecords]="totalRecords"
+          [loading]="loading"
+          [rowsPerPageOptions]="pageRange"
+        >
+          <ng-template pTemplate="header" let-columns>
+            <tr
+              class="shadow-lg p-3 mb-10"
+              style="border-bottom: 2px solid #ccc;"
+            >
+              <th
+                *ngFor="let col of columns"
+                [pSortableColumn]="col.field"
+                class=""
+              >
+                {{ col.header }}
+                <p-sortIcon
+                  [field]="col.field"
+                  ariaLabel="Activate to sort"
+                  ariaLabelDesc="Activate to sort in descending order"
+                  ariaLabelAsc="Activate to sort in ascending order"
+                ></p-sortIcon>
+              </th>
+              <th>Options</th>
+            </tr>
+            <tr>
+              <th *ngFor="let col of columns" [ngSwitch]="col.field">
+                <input
+                  *ngSwitchCase="'id'"
+                  pInputText
+                  type="text"
+                  class="form-control form-control-sm"
+                  (input)="
+                    dt.filter(
+                      $event.target.value,
+                      col.field,
+                      col.filterMatchMode
+                    )
+                  "
+                />
+                <input
+                  *ngSwitchCase="'name'"
+                  pInputText
+                  type="text"
+                  class="form-control form-control-sm"
+                  (input)="
+                    dt.filter(
+                      $event.target.value,
+                      col.field,
+                      col.filterMatchMode
+                    )
+                  "
+                />
+                <input
+                  *ngSwitchCase="'payment_style'"
+                  pInputText
+                  type="text"
+                  class="form-control form-control-sm"
+                  (input)="
+                    dt.filter(
+                      $event.target.value,
+                      col.field,
+                      col.filterMatchMode
+                    )
+                  "
+                />
+                <input
+                  *ngSwitchCase="'amount'"
+                  pInputText
+                  type="text"
+                  class="form-control"
+                  placeholder=" Greater Than"
+                  (input)="
+                    dt.filter(
+                      $event.target.value,
+                      col.field,
+                      col.filterMatchMode
+                    )
+                  "
+                />
+              </th>
+              <th></th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-rowData let-columns="columns">
+            <tr>
+              <td
+                *ngFor="let col of columns"
+                style="
+                  padding-top: 0px !important;
+                  padding-bottom: 0px !important;
+                "
+              >
+                {{ rowData[col.field] }}
+              </td>
+              <td>
+                <button
+                  class="btn btn-sm btn-outline-warning"
+                  pTooltip="Edit"
+                  tooltipPosition="left"
+                  (click)="
+                    editMode = true;
+                    updateForm(frm, rowData);
+                    modalAddEdit.show()
+                  "
+                >
+                  <i class="fa fa-edit"></i>
+                </button>
+                <button
+                  class="btn btn-sm btn-outline-danger"
+                  data-toggle="modal"
+                  pTooltip="Delete"
+                  tooltipPosition="right"
+                  (click)="openDeleteModal(rowData.id)"
+                >
+                  <i class="fa fa-trash"></i>
+                </button>
+              </td>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="paginatorleft" let-state>
+            <div style="background: #49a9d8; color: #fff; border-radius: 5px; padding: 5px 8px;" class="font-weight-bold">
+              {{ state.totalRecords }} record(s) found.
+            </div>
+          </ng-template>
+        </p-table>
+      </div>
+    </div>
+    <!--/.col-->
+  </div>
+  <!--/.row-->
+  <!-- ================================END BODY================================================== -->
+  <!-- Modals Area (out of design area) -->
+  <!-- Add modals -->
+  <div
+    bsModal
+    [config]="{backdrop: 'static', keyboard: false}"
+    #modalAddEdit="bs-modal"
+    class="modal fade"
+    tabindex="-1"
+    role="dialog"
+    aria-labelledby="myModalLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog modal-md" role="document">
+      <form #frm="ngForm" (ngSubmit)="onAddEdit(frm)">
+        <div
+          [class]="
+            editMode
+              ? 'modal-content  border border-warning'
+              : 'modal-content  border border-success'
+          "
+        >
+          <div
+            [class]="
+              editMode ? 'modal-header bg-warning' : 'modal-header bg-success'
+            "
+          >
+            <h4 class="modal-title">
+              {{ editMode ? 'EDIT' : 'ADD' }} {{ title | uppercase }}
+              <span *ngIf="editMode">: ID - {{ editId }}</span>
+            </h4>
+            <button
+              type="button"
+              class="close"
+              (click)="modalAddEdit.hide()"
+              aria-label="Close"
+            >
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div>
+            <small class="text-muted form-text p10"
+              >All fields are mandatory.</small
+            >
+          </div>
+          <div class="modal-body">
+            <div class="form-group">
+              <label>Charge Title</label>
+              <input
+                type="text"
+                name="name"
+                ngModel
+                class="form-control"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label>Pyament Style</label>
+              <p-dropdown
+                [options]="staticPaymentStyle"
+                placeholder="Select Payment Style"
+                [style]="{ width: '100%' }"
+                name="payment_style"
+                ngModel
+                required
+              ></p-dropdown>
+              <!-- <select class="form-control" name="payment_style" [(ngModel)]="payment_style">
+                <option [ngValue]="'percent'">percent</option>
+                <option [ngValue]="'flat'">flat</option>
+              </select> -->
+            </div>
+            <div class="form-group">
+              <label>Amount</label>
+              <div class="ui-inputgroup">
+                <span class="ui-inputgroup-addon"
+                  ><i class="fa fa-rupee"></i
+                ></span>
+                <input
+                  type="text"
+                  pInputText
+                  placeholder="Price"
+                  class="form-control"
+                  name="amount"
+                  ngModel
+                  required
+                  pattern="^[1-9]+[0-9]*$"
+                />
+                <span class="ui-inputgroup-addon">.00</span>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              (click)="modalAddEdit.hide()"
+            >
+              Close
+            </button>
+            <button
+              type="submit"
+              [class]="editMode ? 'btn btn-warning' : 'btn btn-success'"
+              [disabled]="!frm.valid"
+            >
+              {{ editMode ? 'Update Record' : 'Add Record' }}
+            </button>
+          </div>
+        </div>
+        <!-- /.modal-content -->
+      </form>
+    </div>
+    <!-- /.modal-dialog -->
+  </div>
+  <!-- //------------------- -->
+</div>
